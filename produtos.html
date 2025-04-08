@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>João do Açaí - Produtos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #62016a;
+            --primary-light: #9b27a7;
+            --secondary-color: #ffcc00;
+            --background-cream: #faf7f2;
+            --text-color: #333;
+            --text-secondary: #666;
+            --success-color: #38c172;
+            --warning-color: #ffaa00;
+            --danger-color: #e3342f;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Nunito", sans-serif;
+        }
+
+        body {
+            color: var(--text-color);
+            background-color: var(--gray-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background-color: var(--background-cream);
+            padding: 0.5rem;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        main {
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .navigation-buttons {
+            margin-bottom: 1rem;
+        }
+
+        .products-panel {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .add-product-form {
+            display: grid;
+            grid-template-columns: 1fr 2fr 2fr 1fr 1fr auto;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-primary:disabled {
+            background-color: var(--gray-medium);
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background-color: var(--gray-medium);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d1d1;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 2rem 0 1rem;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .products-table th {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 2px solid var(--gray-medium);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .products-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+
+        .products-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+            border: none;
+        }
+
+        .btn-edit {
+            background-color: var(--warning-color);
+        }
+
+        .btn-delete {
+            background-color: var(--danger-color);
+        }
+
+        .btn-toggle {
+            background-color: var(--success-color);
+        }
+
+        .btn-toggle.hidden {
+            background-color: var(--gray-medium);
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-medium);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-medium);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .add-product-form {
+                grid-template-columns: 1fr;
+            }
+
+            .products-table thead {
+                display: none;
+            }
+
+            .products-table, .products-table tbody, .products-table tr, .products-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .products-table tr {
+                margin-bottom: 1rem;
+                border: 1px solid var(--gray-medium);
+                border-radius: 8px;
+                padding: 0.5rem;
+            }
+
+            .products-table td {
+                display: flex;
+                justify-content: space-between;
+                padding: 0.5rem;
+                text-align: right;
+                border-bottom: 1px solid var(--gray-medium);
+            }
+
+            .products-table td:before {
+                content: attr(data-label);
+                font-weight: 600;
+                text-align: left;
+            }
+
+            .products-table td:last-child {
+                border-bottom: none;
+            }
+
+            .product-actions {
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <div class="logo">
+                <div class="logo-img">
+                    <img src="Imagens/logo-joao-acai.png" alt="Logo" />
+                </div>
+                <div class="logo-text">João do Açaí - Admin</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">A</div>
+            <div class="user-name">Admin</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="navigation-buttons">
+            <a href="index.html"><button type="button" class="btn btn-secondary">Pedidos</button></a>
+            <a href="dashboard.html"><button type="button" class="btn btn-secondary">Dashboard</button></a>
+            <button type="button" class="btn btn-primary">Produtos</button>
+        </div>
+
+        <div class="products-panel">
+            <h2 class="panel-title">Gerenciar Produtos</h2>
+            <form class="add-product-form" id="addProductForm">
+                <div class="form-group">
+                    <label for="productType">Tipo *</label>
+                    <select class="form-control" id="productType" required>
+                        <option value="" disabled selected>Selecione o tipo</option>
+                        <option value="base_acai">Base de Açaí</option>
+                        <option value="base_sorvete">Base de Sorvete</option>
+                        <option value="acompanhamento">Acompanhamento</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productName">Nome do Produto *</label>
+                    <input type="text" class="form-control" id="productName" placeholder="Ex.: Açaí Tradicional" required>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Descrição do Produto</label>
+                    <input type="text" class="form-control" id="productDescription" placeholder="Ex.: Açaí puro">
+                </div>
+                <div class="form-group" id="priceField">
+                    <label for="productPrice">Preço (R$)</label>
+                    <input type="number" class="form-control" id="productPrice" step="0.01" min="0" placeholder="Ex.: 18.90">
+                </div>
+                <div class="form-group" id="pricePerKgField" style="display: none;">
+                    <label for="productPricePerKg">Preço por Kg (R$)</label>
+                    <input type="number" class="form-control" id="productPricePerKg" step="0.01" min="0" placeholder="Ex.: 20.00">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" id="addProductButton" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Adicionar Produto
+                    </button>
+                </div>
+            </form>
+
+            <div class="products-section">
+                <h3 class="section-title">Bases de Açaí</h3>
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th>Preço</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="baseAcaiTableBody">
+                        <!-- Bases de Açaí serão carregadas dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="products-section">
+                <h3 class="section-title">Bases de Sorvete</h3>
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th>Preço</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="baseSorveteTableBody">
+                        <!-- Bases de Sorvete serão carregadas dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="products-section">
+                <h3 class="section-title">Acompanhamentos</h3>
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th>Preço</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="acompanhamentoTableBody">
+                        <!-- Acompanhamentos serão carregados dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="productEditModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Produto</h3>
+                <button class="modal-close" id="closeModal">×</button>
+            </div>
+            <div class="modal-body">
+                <form class="modal-form" id="productEditForm">
+                    <div class="form-group">
+                        <label for="editProductType">Tipo *</label>
+                        <select class="form-control" id="editProductType" required>
+                            <option value="base_acai">Base de Açaí</option>
+                            <option value="base_sorvete">Base de Sorvete</option>
+                            <option value="acompanhamento">Acompanhamento</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductName">Nome do Produto *</label>
+                        <input type="text" class="form-control" id="editProductName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductDescription">Descrição do Produto</label>
+                        <input type="text" class="form-control" id="editProductDescription">
+                    </div>
+                    <div class="form-group" id="editPriceField">
+                        <label for="editProductPrice">Preço (R$)</label>
+                        <input type="number" class="form-control" id="editProductPrice" step="0.01" min="0">
+                    </div>
+                    <div class="form-group" id="editPricePerKgField" style="display: none;">
+                        <label for="editProductPricePerKg">Preço por Kg (R$)</label>
+                        <input type="number" class="form-control" id="editProductPricePerKg" step="0.01" min="0">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelEdit">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveProductChanges">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let products = [
+            { id: "1", type: "base_acai", name: "Açaí Tradicional", description: "Açaí puro", pricePerKg: 20.00, isVisible: true },
+            { id: "2", type: "base_acai", name: "Açaí com Morango", description: "Açaí com morango", pricePerKg: 25.00, isVisible: true },
+            { id: "3", type: "base_acai", name: "Açaí com Pistache", description: "Açaí com pistache", pricePerKg: 30.00, isVisible: false },
+            { id: "4", type: "base_sorvete", name: "Sorvete de Chocolate", description: "Sorvete cremoso de chocolate", pricePerKg: 18.00, isVisible: true },
+            { id: "5", type: "base_sorvete", name: "Sorvete de Baunilha", description: "Sorvete cremoso de baunilha", pricePerKg: 18.00, isVisible: true },
+            { id: "6", type: "base_sorvete", name: "Sorvete de Morango", description: "Sorvete cremoso de morango", pricePerKg: 18.00, isVisible: false },
+            { id: "7", type: "acompanhamento", name: "Granola", description: "Granola extra", price: 5.00, isVisible: true },
+            { id: `8`, type: "acompanhamento", name: "Morango", description: "Morangos frescos", price: 6.00, isVisible: true },
+            { id: "9", type: "acompanhamento", name: "Leite Condensado", description: "Leite condensado extra", price: 3.90, isVisible: true }
+        ];
+
+        const addProductForm = document.getElementById('addProductForm');
+        const productTypeInput = document.getElementById('productType');
+        const productNameInput = document.getElementById('productName');
+        const productDescriptionInput = document.getElementById('productDescription');
+        const productPriceInput = document.getElementById('productPrice');
+        const productPricePerKgInput = document.getElementById('productPricePerKg');
+        const priceField = document.getElementById('priceField');
+        const pricePerKgField = document.getElementById('pricePerKgField');
+        const addProductButton = document.getElementById('addProductButton');
+        const baseAcaiTableBody = document.getElementById('baseAcaiTableBody');
+        const baseSorveteTableBody = document.getElementById('baseSorveteTableBody');
+        const acompanhamentoTableBody = document.getElementById('acompanhamentoTableBody');
+        const productEditModal = document.getElementById('productEditModal');
+        const closeModal = document.getElementById('closeModal');
+        const cancelEdit = document.getElementById('cancelEdit');
+        const saveProductChanges = document.getElementById('saveProductChanges');
+        const editProductType = document.getElementById('editProductType');
+        const editProductName = document.getElementById('editProductName');
+        const editProductDescription = document.getElementById('editProductDescription');
+        const editProductPrice = document.getElementById('editProductPrice');
+        const editProductPricePerKg = document.getElementById('editProductPricePerKg');
+        const editPriceField = document.getElementById('editPriceField');
+        const editPricePerKgField = document.getElementById('editPricePerKgField');
+
+        let currentEditProductId = null;
+
+        function initApp() {
+            loadProducts();
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
+            productNameInput.addEventListener('input', validateForm);
+            productTypeInput.addEventListener('change', (e) => {
+                togglePriceFields(e.target.value);
+                validateForm();
+            });
+            addProductForm.addEventListener('submit', addProduct);
+            closeModal.addEventListener('click', () => {
+                productEditModal.style.display = 'none';
+            });
+            cancelEdit.addEventListener('click', () => {
+                productEditModal.style.display = 'none';
+            });
+            saveProductChanges.addEventListener('click', saveProductChangesHandler);
+            editProductType.addEventListener('change', (e) => {
+                toggleEditPriceFields(e.target.value);
+            });
+            window.addEventListener('click', (e) => {
+                if (e.target === productEditModal) {
+                    productEditModal.style.display = 'none';
+                }
+            });
+        }
+
+        function togglePriceFields(type) {
+            if (type === 'base_acai' || type === 'base_sorvete') {
+                priceField.style.display = 'none';
+                pricePerKgField.style.display = 'block';
+            } else {
+                priceField.style.display = 'block';
+                pricePerKgField.style.display = 'none';
+            }
+        }
+
+        function toggleEditPriceFields(type) {
+            if (type === 'base_acai' || type === 'base_sorvete') {
+                editPriceField.style.display = 'none';
+                editPricePerKgField.style.display = 'block';
+            } else {
+                editPriceField.style.display = 'block';
+                editPricePerKgField.style.display = 'none';
+            }
+        }
+
+        function validateForm() {
+            const name = productNameInput.value.trim();
+            const type = productTypeInput.value;
+            const price = parseFloat(productPriceInput.value);
+            const pricePerKg = parseFloat(productPricePerKgInput.value);
+            const isBase = type === 'base_acai' || type === 'base_sorvete';
+            addProductButton.disabled = !name || !type || (isBase && !pricePerKg) || (!isBase && !price);
+        }
+
+        function addProduct(e) {
+            e.preventDefault();
+            const type = productTypeInput.value;
+            const name = productNameInput.value.trim();
+            const description = productDescriptionInput.value.trim();
+            const price = parseFloat(productPriceInput.value) || 0;
+            const pricePerKg = parseFloat(productPricePerKgInput.value) || 0;
+
+            if (!name || !type) return;
+
+            const newProduct = {
+                id: (products.length + 1).toString(),
+                type,
+                name,
+                description,
+                isVisible: true
+            };
+
+            if (type === 'base_acai' || type === 'base_sorvete') {
+                newProduct.pricePerKg = pricePerKg;
+            } else {
+                newProduct.price = price;
+            }
+
+            products.push(newProduct);
+            loadProducts();
+
+            addProductForm.reset();
+            productTypeInput.value = '';
+            priceField.style.display = 'block';
+            pricePerKgField.style.display = 'none';
+            addProductButton.disabled = true;
+        }
+
+        function loadProducts() {
+            baseAcaiTableBody.innerHTML = '';
+            baseSorveteTableBody.innerHTML = '';
+            acompanhamentoTableBody.innerHTML = '';
+
+            const basesAcai = products.filter(p => p.type === 'base_acai').sort((a, b) => a.name.localeCompare(b.name));
+            const basesSorvete = products.filter(p => p.type === 'base_sorvete').sort((a, b) => a.name.localeCompare(b.name));
+            const acompanhamentos = products.filter(p => p.type === 'acompanhamento').sort((a, b) => a.name.localeCompare(b.name));
+
+            basesAcai.forEach(product => {
+                const row = createProductRow(product);
+                baseAcaiTableBody.appendChild(row);
+            });
+
+            basesSorvete.forEach(product => {
+                const row = createProductRow(product);
+                baseSorveteTableBody.appendChild(row);
+            });
+
+            acompanhamentos.forEach(product => {
+                const row = createProductRow(product);
+                acompanhamentoTableBody.appendChild(row);
+            });
+        }
+
+        function createProductRow(product) {
+            const row = document.createElement('tr');
+            row.setAttribute('data-product-id', product.id);
+            const priceDisplay = product.pricePerKg ? `R$ ${product.pricePerKg.toFixed(2)}/kg` : product.price ? `R$ ${product.price.toFixed(2)}` : 'N/A';
+            row.innerHTML = `
+                <td data-label="Nome">${product.name}</td>
+                <td data-label="Descrição">${product.description || 'Nenhuma'}</td>
+                <td data-label="Preço">${priceDisplay}</td>
+                <td data-label="Status">${product.isVisible ? 'Ativo' : 'Oculto'}</td>
+                <td data-label="Ações" class="product-actions">
+                    <button class="action-btn btn-edit" onclick="editProduct('${product.id}')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                    <button class="action-btn btn-delete" onclick="deleteProduct('${product.id}')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                    </button>
+                    <button class="action-btn btn-toggle ${product.isVisible ? '' : 'hidden'}" onclick="toggleProductVisibility('${product.id}')">
+                        ${product.isVisible ? `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        ` : `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        `}
+                    </button>
+                </td>
+            `;
+            return row;
+        }
+
+        function deleteProduct(productId) {
+            if (confirm('Tem certeza que deseja excluir este produto?')) {
+                products = products.filter(product => product.id !== productId);
+                loadProducts();
+            }
+        }
+
+        function toggleProductVisibility(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                product.isVisible = !product.isVisible;
+                loadProducts();
+            }
+        }
+
+        function editProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                currentEditProductId = productId;
+                editProductType.value = product.type;
+                editProductName.value = product.name;
+                editProductDescription.value = product.description || '';
+                editProductPrice.value = product.price || '';
+                editProductPricePerKg.value = product.pricePerKg || '';
+                toggleEditPriceFields(product.type);
+                productEditModal.style.display = 'flex';
+            }
+        }
+
+        function saveProductChangesHandler() {
+            const type = editProductType.value;
+            const name = editProductName.value.trim();
+            const price = parseFloat(editProductPrice.value) || 0;
+            const pricePerKg = parseFloat(editProductPricePerKg.value) || 0;
+
+            if (!name || !type) {
+                alert('O nome do produto e o tipo são obrigatórios.');
+                return;
+            }
+
+            const product = products.find(p => p.id === currentEditProductId);
+            if (product) {
+                product.type = type;
+                product.name = name;
+                product.description = editProductDescription.value.trim();
+                if (type === 'base_acai' || type === 'base_sorvete') {
+                    product.pricePerKg = pricePerKg;
+                    delete product.price;
+                } else {
+                    product.price = price;
+                    delete product.pricePerKg;
+                }
+                productEditModal.style.display = 'none';
+                loadProducts();
+            }
+        }
+
+        initApp();
+    </script>
+</body>
+</html>

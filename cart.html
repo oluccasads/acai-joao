@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>João do Açaí - Carrinho</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #62016a;
+            --primary-light: #9b27a7;
+            --secondary-color: #ffcc00;
+            --background-cream: #faf7f2;
+            --text-color: #333;
+            --text-secondary: #666;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Nunito", sans-serif;
+        }
+
+        body {
+            color: var(--text-color);
+            background-color: var(--background-cream);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background-color: var(--background-cream);
+            padding: 0.5rem;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        main {
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .cart-items {
+            margin-bottom: 2rem;
+        }
+
+        .cart-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .cart-item h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item p {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-total {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: right;
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-secondary {
+            background-color: var(--gray-medium);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d1d1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="logo-img">
+                <img src="Imagens/logo-joao-acai.png" alt="Logo" />
+            </div>
+            <div class="logo-text">João do Açaí</div>
+        </div>
+    </header>
+
+    <main>
+        <h2 class="section-title">Seu Carrinho</h2>
+        <div class="cart-items" id="cartItems">
+            <!-- Itens do carrinho serão carregados dinamicamente -->
+        </div>
+        <div class="cart-total" id="cartTotal">
+            Total: R$ 0.00
+        </div>
+        <div class="cart-actions">
+            <a href="client.html" class="btn btn-secondary">Adicionar Mais um Produto</a>
+            <button class="btn btn-primary" id="finalizeOrder">Finalizar Pedido</button>
+        </div>
+    </main>
+
+    <script src="data.js"></script>
+    <script>
+        const cartItemsDiv = document.getElementById('cartItems');
+        const cartTotalDiv = document.getElementById('cartTotal');
+        const finalizeOrderBtn = document.getElementById('finalizeOrder');
+
+        function loadCart() {
+            const cart = getCart();
+            cartItemsDiv.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = '<p>Seu carrinho está vazio.</p>';
+                cartTotalDiv.textContent = 'Total: R$ 0.00';
+                return;
+            }
+
+            cart.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('cart-item');
+                itemDiv.innerHTML = `
+                    <h3>${item.type} #${index + 1}</h3>
+                    <p><strong>Base:</strong> ${item.base}</p>
+                    <p><strong>Acompanhamentos:</strong> ${item.acompanhamentos.join(', ') || 'Nenhum'}</p>
+                    <p><strong>Preço:</strong> R$ ${item.totalPrice.toFixed(2)}</p>
+                `;
+                cartItemsDiv.appendChild(itemDiv);
+            });
+
+            const total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+            cartTotalDiv.textContent = `Total: R$ ${total.toFixed(2)}`;
+        }
+
+        finalizeOrderBtn.addEventListener('click', () => {
+            const cart = getCart();
+            if (cart.length === 0) {
+                alert('Seu carrinho está vazio!');
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+            const summary = cart.map((item, index) => {
+                return `${item.type} #${index + 1}:\nBase: ${item.base}\nAcompanhamentos: ${item.acompanhamentos.join(', ') || 'Nenhum'}\nPreço: R$ ${item.totalPrice.toFixed(2)}`;
+            }).join('\n\n');
+
+            alert(`Pedido Finalizado!\n\n${summary}\n\nTotal: R$ ${total.toFixed(2)}`);
+            clearCart();
+            window.location.href = 'client.html';
+        });
+
+        loadCart();
+    </script>
+</body>
+</html>

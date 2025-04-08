@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>João do Açaí - Monte seu Sorvete</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #62016a;
+            --primary-light: #9b27a7;
+            --secondary-color: #ffcc00;
+            --background-cream: #faf7f2;
+            --text-color: #333;
+            --text-secondary: #666;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Nunito", sans-serif;
+        }
+
+        body {
+            color: var(--text-color);
+            background-color: var(--background-cream);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background-color: var(--background-cream);
+            padding: 0.5rem;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        main {
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .form-control {
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            width: 200px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .weight-info {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .acompanhamentos-rules {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            background-color: var(--gray-light);
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .card-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 200px;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .card.selected {
+            border-color: var(--primary-color);
+            background-color: var(--gray-light);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            background-color: var(--gray-light); /* Fallback para imagens ausentes */
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .error-message {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn:disabled {
+            background-color: var(--gray-medium);
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                width: 150px;
+            }
+
+            .card img {
+                height: 90px;
+            }
+
+            .card h3 {
+                font-size: 0.9rem;
+            }
+
+            .card p {
+                font-size: 0.8rem;
+            }
+
+            .form-control {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="logo-img">
+                <img src="Imagens/logo-joao-acai.png" alt="Logo" />
+            </div>
+            <div class="logo-text">João do Açaí</div>
+        </div>
+    </header>
+
+    <main>
+        <h2 class="section-title">Monte seu Sorvete</h2>
+        <form id="orderForm">
+            <div class="form-group">
+                <label>Escolha a Base</label>
+                <div class="card-group" id="baseSorveteCards">
+                    <!-- Cards de bases serão carregados dinamicamente -->
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Quanto você deseja? (Mínimo: R$ 5,00)</label>
+                <input type="number" class="form-control" id="desiredValue" min="5" step="0.01" required>
+                <div class="weight-info" id="weightInfo"></div>
+                <div class="acompanhamentos-rules">
+                    <p>Quantidade de acompanhamentos permitida:</p>
+                    <ul>
+                        <li>R$ 5,00 a R$ 9,99: até 3 acompanhamentos</li>
+                        <li>R$ 10,00 a R$ 14,99: até 5 acompanhamentos</li>
+                        <li>R$ 15,00 a R$ 19,99: até 7 acompanhamentos</li>
+                        <li>Acima de R$ 20,00: até 10 acompanhamentos</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Acompanhamentos</label>
+                <div class="card-group" id="acompanhamentosCards">
+                    <!-- Cards de acompanhamentos serão carregados dinamicamente -->
+                </div>
+                <div class="error-message" id="acompanhamentosError"></div>
+            </div>
+            <button type="submit" class="btn" id="addToCartButton" disabled>Adicionar ao Carrinho</button>
+        </form>
+    </main>
+
+    <script src="data.js"></script>
+    <script>
+        const baseSorveteCardsDiv = document.getElementById('baseSorveteCards');
+        const acompanhamentosCardsDiv = document.getElementById('acompanhamentosCards');
+        const orderForm = document.getElementById('orderForm');
+        const addToCartButton = document.getElementById('addToCartButton');
+        const acompanhamentosError = document.getElementById('acompanhamentosError');
+        const desiredValueInput = document.getElementById('desiredValue');
+        const weightInfoDiv = document.getElementById('weightInfo');
+
+        let selectedBase = null;
+        let selectedAcompanhamentos = [];
+        let desiredValue = 0;
+        let maxAcompanhamentos = 0;
+
+        function loadOptions() {
+            const basesSorvete = products.filter(p => p.type === 'base_sorvete' && p.isVisible);
+            const acompanhamentos = products.filter(p => p.type === 'acompanhamento' && p.isVisible);
+
+            basesSorvete.forEach(base => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.id = base.id;
+                card.innerHTML = `
+                    <img src="Imagens/pote-de-sorvete.jpg" alt="${base.name}" onerror="this.src='https://via.placeholder.com/120?text=Sorvete'">
+                    <h3>${base.name}</h3>
+                    <p>R$ ${base.price.toFixed(2)}/kg</p>
+                `;
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('#baseSorveteCards .card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    selectedBase = base;
+                    updateWeightInfo();
+                    validateForm();
+                });
+                baseSorveteCardsDiv.appendChild(card);
+            });
+
+            acompanhamentos.forEach(acomp => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.id = acomp.id;
+                card.innerHTML = `
+                    <img src="Imagens/acompanhamento-placeholder.jpg" alt="${acomp.name}" onerror="this.src='https://via.placeholder.com/120?text=Acompanhamento'">
+                    <h3>${acomp.name}</h3>
+                    <p>Grátis</p>
+                `;
+                card.addEventListener('click', () => {
+                    const index = selectedAcompanhamentos.findIndex(a => a.id === acomp.id);
+                    if (index >= 0) {
+                        selectedAcompanhamentos.splice(index, 1);
+                        card.classList.remove('selected');
+                    } else if (selectedAcompanhamentos.length < maxAcompanhamentos) {
+                        selectedAcompanhamentos.push(acomp);
+                        card.classList.add('selected');
+                    }
+                    validateForm();
+                });
+                acompanhamentosCardsDiv.appendChild(card);
+            });
+        }
+
+        function updateMaxAcompanhamentos() {
+            if (desiredValue >= 5 && desiredValue <= 9.99) {
+                maxAcompanhamentos = 3;
+            } else if (desiredValue >= 10 && desiredValue <= 14.99) {
+                maxAcompanhamentos = 5;
+            } else if (desiredValue >= 15 && desiredValue <= 19.99) {
+                maxAcompanhamentos = 7;
+            } else if (desiredValue >= 20) {
+                maxAcompanhamentos = 10;
+            } else {
+                maxAcompanhamentos = 0;
+            }
+
+            // Remove acompanhamentos excedentes se o valor desejado diminuir
+            while (selectedAcompanhamentos.length > maxAcompanhamentos) {
+                const removedAcomp = selectedAcompanhamentos.pop();
+                const card = document.querySelector(`#acompanhamentosCards .card[data-id="${removedAcomp.id}"]`);
+                if (card) card.classList.remove('selected');
+            }
+        }
+
+        function updateWeightInfo() {
+            if (selectedBase && desiredValue >= 5) {
+                const weight = desiredValue / selectedBase.price;
+                weightInfoDiv.textContent = `Você levará ${weight.toFixed(2)} kg de ${selectedBase.name}.`;
+            } else {
+                weightInfoDiv.textContent = '';
+            }
+        }
+
+        function validateForm() {
+            updateMaxAcompanhamentos();
+            const isValid = selectedBase && desiredValue >= 5 && selectedAcompanhamentos.length <= maxAcompanhamentos;
+            addToCartButton.disabled = !isValid;
+
+            if (desiredValue < 5 && desiredValue > 0) {
+                acompanhamentosError.textContent = 'O valor mínimo é R$ 5,00.';
+                acompanhamentosError.style.display = 'block';
+            } else if (selectedAcompanhamentos.length > maxAcompanhamentos) {
+                acompanhamentosError.textContent = `Você pode selecionar até ${maxAcompanhamentos} acompanhamentos para o valor de R$ ${desiredValue.toFixed(2)}.`;
+                acompanhamentosError.style.display = 'block';
+            } else {
+                acompanhamentosError.style.display = 'none';
+            }
+        }
+
+        desiredValueInput.addEventListener('input', () => {
+            desiredValue = parseFloat(desiredValueInput.value) || 0;
+            updateWeightInfo();
+            validateForm();
+        });
+
+        orderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!selectedBase || desiredValue < 5 || selectedAcompanhamentos.length > maxAcompanhamentos) return;
+
+            const weight = desiredValue / selectedBase.pricePerKg;
+            const cartItem = {
+                type: 'Sorvete',
+                base: selectedBase.name,
+                weight: weight,
+                totalPrice: desiredValue,
+                acompanhamentos: selectedAcompanhamentos.map(a => a.name)
+            };
+
+            addToCart(cartItem);
+            window.location.href = 'cart.html';
+        });
+
+        loadOptions();
+    </script>
+</body>
+</html>

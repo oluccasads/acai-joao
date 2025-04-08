@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>João do Açaí - Painel Administrativo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #62016a;
+            --primary-light: #9b27a7;
+            --secondary-color: #ffcc00;
+            --background-cream: #faf7f2;
+            --text-color: #333;
+            --text-secondary: #666;
+            --success-color: #38c172;
+            --warning-color: #ffaa00;
+            --danger-color: #e3342f;
+            --pending-color: #3490dc;
+            --in-transit-color: #00b7eb;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Nunito", sans-serif;
+        }
+
+        body {
+            color: var(--text-color);
+            background-color: var(--gray-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background-color: var(--background-cream);
+            padding: 0.5rem;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .store-status {
+            margin-left: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+
+        .status-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--danger-color);
+            transition: background-color 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: transform 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success-color);
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--success-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .status-label {
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        main {
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .filters {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .filters-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .filters-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-group input[type="date"] {
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-family: "Nunito", sans-serif;
+        }
+
+        .form-group input[type="date"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .filter-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-secondary {
+            background-color: var(--gray-medium);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d1d1;
+        }
+
+        .orders-panel {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .orders-count {
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.3rem 0.8rem;
+            border-radius: 100px;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table th {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 2px solid var(--gray-medium);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .orders-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+
+        .orders-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .order-id {
+            font-weight: 600;
+        }
+
+        .order-customer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .customer-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--gray-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-pending {
+            background-color: var(--pending-color);
+            color: white;
+        }
+
+        .badge-preparing {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .badge-delivered {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .badge-cancelled {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .badge-in-transit {
+            background-color: var(--in-transit-color);
+            color: white;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+            border: none;
+        }
+
+        .btn-view {
+            background-color: var(--pending-color);
+        }
+
+        .btn-view.active {
+            background-color: var(--danger-color);
+        }
+
+        .btn-edit {
+            background-color: var(--warning-color);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+
+        .status-select {
+            padding: 0.5rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background-color: white;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .status-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .status-select.status-pending {
+            border-color: var(--pending-color);
+            background-color: var(--pending-color);
+            color: white;
+        }
+
+        .status-select.status-preparing {
+            border-color: var(--warning-color);
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .status-select.status-delivered {
+            border-color: var(--success-color);
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .status-select.status-cancelled {
+            border-color: var(--danger-color);
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .status-select.status-in-transit {
+            border-color: var(--in-transit-color);
+            background-color: var(--in-transit-color);
+            color: white;
+        }
+
+        .status-select option {
+            background-color: white;
+            color: var(--text-color);
+            font-weight: 400;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            gap: 0.5rem;
+        }
+
+        .page-item {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            border: 1px solid var(--gray-medium);
+            transition: all 0.2s;
+        }
+
+        .page-item.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .page-item:hover:not(.active) {
+            background-color: var(--gray-medium);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-medium);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-medium);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .order-details {
+            background-color: #f9f9f9;
+            border: 1px solid var(--gray-medium);
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+        }
+
+        .order-details h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .order-details p {
+            margin: 0.3rem 0;
+            font-size: 0.9rem;
+        }
+
+        .order-details ul {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0;
+        }
+
+        .order-details li {
+            font-size: 0.9rem;
+            margin: 0.2rem 0;
+        }
+
+        .close-details {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+
+        .close-details:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .filters-form {
+                grid-template-columns: 1fr;
+            }
+
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .store-status {
+                margin-left: 0;
+            }
+
+            .orders-table thead {
+                display: none;
+            }
+
+            .orders-table, .orders-table tbody, .orders-table tr, .orders-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .orders-table tr {
+                margin-bottom: 1rem;
+                border: 1px solid var(--gray-medium);
+                border-radius: 8px;
+                padding: 0.5rem;
+            }
+
+            .orders-table td {
+                display: flex;
+                justify-content: space-between;
+                padding: 0.5rem;
+                text-align: right;
+                border-bottom: 1px solid var(--gray-medium);
+            }
+
+            .orders-table td:before {
+                content: attr(data-label);
+                font-weight: 600;
+                text-align: left;
+            }
+
+            .orders-table td:last-child {
+                border-bottom: none;
+            }
+
+            .order-actions {
+                justify-content: flex-end;
+            }
+
+            .order-details {
+                margin: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <div class="logo">
+                <div class="logo-img">
+                    <img src="Imagens/logo-joao-acai.png" alt="Logo" />
+                </div>
+                <div class="logo-text">João do Açaí - Admin</div>
+            </div>
+            <div class="store-status">
+                <span id="statusLabel" class="status-label">Loja Fechada</span>
+                <label class="status-toggle">
+                    <input type="checkbox" id="storeStatusToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">A</div>
+            <div class="user-name">Admin</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="dashboard">
+            <div class="navigation-buttons" style="margin-bottom: 1rem;">
+                <button type="button" class="btn btn-primary">Pedidos</button>
+                <a href="dashboard.html"><button type="button" class="btn btn-secondary">Dashboard</button></a>
+                <a href="products.html"><button type="button" class="btn btn-secondary">Produtos</button></a>
+            </div>
+            <div class="filters">
+                <h2 class="filters-title">Filtros</h2>
+                <form class="filters-form" id="filtersForm">
+                    <div class="form-group">
+                        <label for="filterStartDate">Data de Início</label>
+                        <input type="date" class="form-control" id="filterStartDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="filterEndDate">Data de Término</label>
+                        <input type="date" class="form-control" id="filterEndDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="filterCustomer">Cliente</label>
+                        <input type="text" class="form-control" id="filterCustomer" placeholder="Nome do cliente">
+                    </div>
+                    <div class="form-group">
+                        <label for="filterStatus">Status</label>
+                        <select class="form-control" id="filterStatus">
+                            <option value="">Todos</option>
+                            <option value="pending">Pendente</option>
+                            <option value="preparing">Em Preparo</option>
+                            <option value="in_transit">Em Rota de Entrega</option>
+                            <option value="delivered">Entregue</option>
+                            <option value="cancelled">Cancelado</option>
+                        </select>
+                    </div>
+                    <div class="filter-actions">
+                        <button type="button" class="btn btn-secondary" id="resetFilters">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3v18h18"></path>
+                                <path d="M18.36 11.64a6 6 0 1 0-8.48 0"></path>
+                                <path d="m21 3-9 9"></path>
+                            </svg>
+                            Limpar
+                        </button>
+                        <button type="button" class="btn btn-primary" id="applyFilters">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"></path>
+                            </svg>
+                            Filtrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="orders-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Pedidos</h2>
+                    <div class="orders-count">0</div>
+                </div>
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Pedido</th>
+                            <th>Cliente</th>
+                            <th>Valor</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Table content will be loaded dynamically -->
+                    </tbody>
+                </table>
+
+                <div class="pagination" id="ordersPagination">
+                    <!-- Pagination will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="orderEditModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Pedido <span id="modalOrderId"></span></h3>
+                <button class="modal-close" id="closeModal">×</button>
+            </div>
+            <div class="modal-body">
+                <form class="modal-form" id="orderEditForm">
+                    <div class="form-group">
+                        <label for="orderStatus">Status do Pedido</label>
+                        <select class="form-control" id="orderStatus">
+                            <option value="pending">Pendente</option>
+                            <option value="preparing">Em Preparo</option>
+                            <option value="in_transit">Em Rota de Entrega</option>
+                            <option value="delivered">Entregue</option>
+                            <option value="cancelled">Cancelado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="orderNotes">Observações</label>
+                        <textarea class="form-control" id="orderNotes" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelEdit">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveOrderChanges">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let orders = [
+            {
+                id: "01",
+                customer: "Maria Silva",
+                total: 28.90,
+                date: "2025-04-07T14:30:00",
+                status: "pending",
+                items: [
+                    { name: "Açaí 500ml", quantity: 1, price: 18.90 },
+                    { name: "Adicional Granola", quantity: 1, price: 5.00 },
+                    { name: "Adicional Banana", quantity: 1, price: 5.00 }
+                ],
+                notes: "",
+                address: "Rua das Flores, 123",
+                city: "São Paulo"
+            },
+            {
+                id: "02",
+                customer: "João Pereira",
+                total: 32.80,
+                date: "2025-04-07T15:15:00",
+                status: "preparing",
+                items: [
+                    { name: "Açaí 700ml", quantity: 1, price: 22.90 },
+                    { name: "Adicional Morango", quantity: 1, price: 6.00 },
+                    { name: "Adicional Leite Condensado", quantity: 1, price: 3.90 }
+                ],
+                notes: "Sem banana, por favor.",
+                address: "Avenida Central, 456",
+                city: "Rio de Janeiro"
+            },
+            {
+                id: "03",
+                customer: "Ana Costa",
+                total: 45.70,
+                date: "2025-04-07T13:45:00",
+                status: "delivered",
+                items: [
+                    { name: "Açaí 500ml", quantity: 2, price: 37.80 },
+                    { name: "Adicional Granola", quantity: 1, price: 5.00 },
+                    { name: "Adicional Mel", quantity: 1, price: 2.90 }
+                ],
+                notes: "Entregar até 14:30",
+                address: "Rua do Sol, 789",
+                city: "Belo Horizonte"
+            },
+            {
+                id: "04",
+                customer: "Carlos Santos",
+                total: 52.80,
+                date: "2025-04-06T19:20:00",
+                status: "in_transit",
+                items: [
+                    { name: "Açaí 700ml", quantity: 2, price: 45.80 },
+                    { name: "Adicional Granola", quantity: 1, price: 5.00 },
+                    { name: "Adicional Mel", quantity: 1, price: 2.00 }
+                ],
+                notes: "",
+                address: "Rua da Lua, 101",
+                city: "Curitiba"
+            },
+            {
+                id: "05",
+                customer: "Roberto Oliveira",
+                total: 18.90,
+                date: "2025-04-06T20:10:00",
+                status: "cancelled",
+                items: [
+                    { name: "Açaí 500ml", quantity: 1, price: 18.90 }
+                ],
+                notes: "Cancelado pelo cliente - mudou de ideia",
+                address: "Avenida das Estrelas, 202",
+                city: "Porto Alegre"
+            },
+            {
+                id: "06",
+                customer: "Mariana Lima",
+                total: 42.70,
+                date: "2025-04-07T12:05:00",
+                status: "in_transit",
+                items: [
+                    { name: "Açaí 700ml", quantity: 1, price: 22.90 },
+                    { name: "Açaí 300ml", quantity: 1, price: 12.90 },
+                    { name: "Adicional Granola", quantity: 2, price: 6.90 }
+                ],
+                notes: "",
+                address: "Rua das Palmeiras, 303",
+                city: "Salvador"
+            }
+        ];
+
+        let currentPage = 1;
+        let itemsPerPage = 20;
+        let filteredOrders = [];
+        let storeStatus = false;
+        let currentlyOpenOrderId = null;
+        let lastOrderId = 0;
+
+        const ordersTableBody = document.getElementById('ordersTableBody');
+        const ordersPagination = document.getElementById('ordersPagination');
+        const storeStatusToggle = document.getElementById('storeStatusToggle');
+        const statusLabel = document.getElementById('statusLabel');
+        const orderEditModal = document.getElementById('orderEditModal');
+        const closeModal = document.getElementById('closeModal');
+        const cancelEdit = document.getElementById('cancelEdit');
+        const modalOrderId = document.getElementById('modalOrderId');
+        const orderStatus = document.getElementById('orderStatus');
+        const orderNotes = document.getElementById('orderNotes');
+        const saveOrderChanges = document.getElementById('saveOrderChanges');
+        const resetFilters = document.getElementById('resetFilters');
+        const applyFilters = document.getElementById('applyFilters');
+        const filterStartDate = document.getElementById('filterStartDate');
+        const filterEndDate = document.getElementById('filterEndDate');
+        const filterCustomer = document.getElementById('filterCustomer');
+        const filterStatus = document.getElementById('filterStatus');
+        const filtersForm = document.getElementById('filtersForm');
+
+        function initApp() {
+            orders.sort((a, b) => new Date(b.date) - new Date(a.date));
+            renumberOrders();
+            lastOrderId = orders.length;
+            filteredOrders = [...orders];
+            loadOrders();
+            setupEventListeners();
+        }
+
+        function renumberOrders() {
+            orders.forEach((order, index) => {
+                const newId = (orders.length - index).toString().padStart(2, '0');
+                order.id = newId;
+            });
+        }
+
+        function addNewOrder(newOrder) {
+            lastOrderId++;
+            const newId = lastOrderId.toString().padStart(2, '0');
+            newOrder.id = newId;
+            orders.push(newOrder);
+            orders.sort((a, b) => new Date(b.date) - new Date(a.date));
+            renumberOrders();
+            filteredOrders = [...orders];
+            loadOrders();
+            console.log(`Novo pedido adicionado: ${newId}`);
+        }
+
+        function simulateNewOrderFromOtherPage() {
+            const newOrder = {
+                customer: "Fernanda Almeida",
+                total: 35.50,
+                date: new Date().toISOString(),
+                status: "pending",
+                items: [
+                    { name: "Açaí 500ml", quantity: 1, price: 18.90 },
+                    { name: "Adicional Morango", quantity: 1, price: 6.00 },
+                    { name: "Adicional Granola", quantity: 1, price: 5.00 }
+                ],
+                notes: "",
+                address: "Rua Nova, 505",
+                city: "Fortaleza"
+            };
+            addNewOrder(newOrder);
+        }
+
+        function setupEventListeners() {
+            storeStatusToggle.addEventListener('change', toggleStoreStatus);
+            closeModal.addEventListener('click', () => {
+                console.log('Fechando modal pelo botão X');
+                orderEditModal.style.display = 'none';
+            });
+            cancelEdit.addEventListener('click', () => {
+                console.log('Cancelando edição pelo botão Cancelar');
+                orderEditModal.style.display = 'none';
+            });
+            saveOrderChanges.addEventListener('click', saveChanges);
+            resetFilters.addEventListener('click', clearFilters);
+            applyFilters.addEventListener('click', applyOrderFilters);
+            filtersForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                applyOrderFilters();
+            });
+            window.addEventListener('click', (e) => {
+                if (e.target === orderEditModal) {
+                    console.log('Fechando modal ao clicar fora');
+                    orderEditModal.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleStoreStatus() {
+            storeStatus = storeStatusToggle.checked;
+            statusLabel.textContent = storeStatus ? 'Loja Aberta' : 'Loja Fechada';
+            console.log(`Toggle loja: ${storeStatus ? 'Aberta' : 'Fechada'}`);
+            updateStoreStatusAPI(storeStatus);
+        }
+
+        function updateStoreStatusAPI(status) {
+            console.log(`Enviando status da loja para API: ${status ? 'Aberta' : 'Fechada'}`);
+        }
+
+        function loadOrders() {
+            ordersTableBody.innerHTML = '';
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedOrders = filteredOrders.slice(startIndex, endIndex);
+            document.querySelector('.orders-count').textContent = filteredOrders.length;
+
+            paginatedOrders.forEach(order => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-order-id', order.id);
+                const orderDate = new Date(order.date);
+                const formattedDate = `${orderDate.toLocaleDateString()} ${orderDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+                const nameParts = order.customer.split(' ');
+                const initials = nameParts.length > 1 ? `${nameParts[0][0]}${nameParts[1][0]}` : nameParts[0][0];
+                const statusClass = order.status.replace(/_/g, '-');
+
+                row.innerHTML = `
+                    <td data-label="Pedido" class="order-id">${order.id}</td>
+                    <td data-label="Cliente">
+                        <div class="order-customer">
+                            <div class="customer-avatar">${initials}</div>
+                            <span>${order.customer}</span>
+                        </div>
+                    </td>
+                    <td data-label="Valor">R$ ${order.total.toFixed(2)}</td>
+                    <td data-label="Data">${formattedDate}</td>
+                    <td data-label="Status">
+                        <select class="status-select status-${statusClass}" onchange="updateOrderStatus('${order.id}', this.value, this)">
+                            <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pendente</option>
+                            <option value="preparing" ${order.status === 'preparing' ? 'selected' : ''}>Em Preparo</option>
+                            <option value="in_transit" ${order.status === 'in_transit' ? 'selected' : ''}>Em Rota de Entrega</option>
+                            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Entregue</option>
+                            <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelado</option>
+                        </select>
+                    </td>
+                    <td data-label="Ações" class="order-actions">
+                        <button class="action-btn btn-view" data-order-id="${order.id}" onclick="viewOrder('${order.id}', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </td>`;
+                ordersTableBody.appendChild(row);
+            });
+
+            updatePagination();
+        }
+
+        function updatePagination() {
+            ordersPagination.innerHTML = '';
+            const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+
+            const prevButton = document.createElement('div');
+            prevButton.classList.add('page-item');
+            prevButton.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            `;
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadOrders();
+                }
+            });
+            ordersPagination.appendChild(prevButton);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('div');
+                pageButton.classList.add('page-item');
+                if (i === currentPage) {
+                    pageButton.classList.add('active');
+                }
+                pageButton.textContent = i;
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    loadOrders();
+                });
+                ordersPagination.appendChild(pageButton);
+            }
+
+            const nextButton = document.createElement('div');
+            nextButton.classList.add('page-item');
+            nextButton.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            `;
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadOrders();
+                }
+            });
+            ordersPagination.appendChild(nextButton);
+        }
+
+        function updateOrderStatus(orderId, newStatus, selectElement) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = newStatus;
+                console.log(`Status do pedido ${orderId} atualizado para: ${newStatus}`);
+                const statusClass = newStatus.replace(/_/g, '-');
+                selectElement.className = `status-select status-${statusClass}`;
+                loadOrders();
+            }
+        }
+
+        function viewOrder(orderId, button) {
+            if (currentlyOpenOrderId && currentlyOpenOrderId !== orderId) {
+                const previousDetailsRow = document.getElementById(`details-${currentlyOpenOrderId}`);
+                if (previousDetailsRow) {
+                    previousDetailsRow.remove();
+                    const previousButton = document.querySelector(`.btn-view[data-order-id="${currentlyOpenOrderId}"]`);
+                    if (previousButton) {
+                        previousButton.classList.remove('active');
+                        previousButton.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        `;
+                    }
+                }
+            }
+
+            const detailsRow = document.getElementById(`details-${orderId}`);
+            if (detailsRow) {
+                detailsRow.remove();
+                button.classList.remove('active');
+                button.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                `;
+                currentlyOpenOrderId = null;
+                return;
+            }
+
+            currentlyOpenOrderId = orderId;
+            button.classList.add('active');
+            button.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 6 6 18"></path>
+                    <path d="m6 6 12 12"></path>
+                </svg>
+            `;
+
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const detailsRowElement = document.createElement('tr');
+            detailsRowElement.id = `details-${orderId}`;
+            detailsRowElement.innerHTML = `
+                <td colspan="6">
+                    <div class="order-details">
+                        <h4>Detalhes do Pedido ${order.id}</h4>
+                        <p><strong>Cliente:</strong> ${order.customer}</p>
+                        <p><strong>Endereço de Entrega:</strong> ${order.address}</p>
+                        <p><strong>Cidade:</strong> ${order.city}</p>
+                        <p><strong>Itens:</strong></p>
+                        <ul>
+                            ${order.items.map(item => `<li>${item.name} - ${item.quantity}x (R$ ${item.price.toFixed(2)})</li>`).join('')}
+                        </ul>
+                        <p><strong>Total:</strong> R$ ${order.total.toFixed(2)}</p>
+                        <p><strong>Observações:</strong> ${order.notes || 'Nenhuma'}</p>
+                        <button class="close-details" onclick="closeDetails('${order.id}')">Fechar</button>
+                    </div>
+                </td>
+            `;
+
+            const orderRow = document.querySelector(`tr[data-order-id="${orderId}"]`);
+            orderRow.insertAdjacentElement('afterend', detailsRowElement);
+        }
+
+        function closeDetails(orderId) {
+            const detailsRow = document.getElementById(`details-${orderId}`);
+            if (detailsRow) {
+                detailsRow.remove();
+                const button = document.querySelector(`.btn-view[data-order-id="${orderId}"]`);
+                if (button) {
+                    button.classList.remove('active');
+                    button.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    `;
+                }
+                currentlyOpenOrderId = null;
+            }
+        }
+
+        function applyOrderFilters() {
+            const startDate = filterStartDate.value ? new Date(filterStartDate.value) : null;
+            const endDate = filterEndDate.value ? new Date(filterEndDate.value) : null;
+            const customer = filterCustomer.value.toLowerCase().trim();
+            const status = filterStatus.value;
+
+            if (startDate && endDate && endDate < startDate) {
+                alert("A data de término deve ser maior ou igual à data de início.");
+                return;
+            }
+
+            filteredOrders = orders.filter(order => {
+                const orderDate = new Date(order.date);
+                const orderDateStr = orderDate.toISOString().split('T')[0];
+                const startDateStr = startDate ? startDate.toISOString().split('T')[0] : null;
+                const endDateStr = endDate ? endDate.toISOString().split('T')[0] : null;
+
+                let matchesDate = true;
+
+                console.log(`Processando pedido ${order.id}: orderDateStr=${orderDateStr}`);
+                if (startDateStr) {
+                    console.log(`startDateStr=${startDateStr}`);
+                }
+                if (endDateStr) {
+                    console.log(`endDateStr=${endDateStr}`);
+                }
+
+                if (startDateStr && endDateStr && startDateStr === endDateStr) {
+                    matchesDate = orderDateStr === startDateStr;
+                    console.log(`Datas iguais - matchesDate=${matchesDate}`);
+                } else {
+                    if (startDateStr) {
+                        matchesDate = matchesDate && orderDateStr >= startDateStr;
+                        console.log(`Comparando com startDate - matchesDate=${matchesDate}`);
+                    }
+                    if (endDateStr) {
+                        matchesDate = matchesDate && orderDateStr <= endDateStr;
+                        console.log(`Comparando com endDate - matchesDate=${matchesDate}`);
+                    }
+                }
+
+                const matchesCustomer = !customer || order.customer.toLowerCase().includes(customer);
+                const matchesStatus = !status || order.status === status;
+
+                return matchesDate && matchesCustomer && matchesStatus;
+            });
+
+            filteredOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+            currentPage = 1;
+            loadOrders();
+            console.log('Filtros aplicados:', { startDate, endDate, customer, status, filteredOrdersCount: filteredOrders.length });
+        }
+
+        function clearFilters() {
+            filterStartDate.value = '';
+            filterEndDate.value = '';
+            filterCustomer.value = '';
+            filterStatus.value = '';
+            filteredOrders = [...orders];
+            filteredOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+            currentPage = 1;
+            loadOrders();
+            console.log('Filtros limpos');
+        }
+
+        function saveChanges() {
+            console.log('Salvando alterações do modal');
+            orderEditModal.style.display = 'none';
+        }
+
+        initApp();
+    </script>
+</body>
+</html>

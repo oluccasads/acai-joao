@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>João do Açaí - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #62016a;
+            --primary-light: #9b27a7;
+            --secondary-color: #ffcc00;
+            --background-cream: #faf7f2;
+            --text-color: #333;
+            --text-secondary: #666;
+            --success-color: #38c172;
+            --warning-color: #ffaa00;
+            --danger-color: #e3342f;
+            --pending-color: #3490dc;
+            --in-transit-color: #00b7eb;
+            --gray-light: #f5f5f5;
+            --gray-medium: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Nunito", sans-serif;
+        }
+
+        body {
+            color: var(--text-color);
+            background-color: var(--gray-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background-color: var(--background-cream);
+            padding: 0.5rem;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        main {
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .navigation-buttons {
+            margin-bottom: 1rem;
+        }
+
+        .filters {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1rem;
+        }
+
+        .filters-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .filters-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-group input[type="date"] {
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-family: "Nunito", sans-serif;
+        }
+
+        .form-group input[type="date"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .period-info {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .status-distribution, .time-distribution {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .status-item, .time-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-label, .time-label {
+            font-weight: 500;
+        }
+
+        .status-bar, .time-bar {
+            width: 100%;
+            background-color: var(--gray-medium);
+            height: 10px;
+            border-radius: 5px;
+            margin-top: 0.5rem;
+            position: relative;
+        }
+
+        .status-bar-fill, .time-bar-fill {
+            height: 100%;
+            border-radius: 5px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .status-bar-fill.pending {
+            background-color: var(--pending-color);
+        }
+
+        .status-bar-fill.preparing {
+            background-color: var(--warning-color);
+        }
+
+        .status-bar-fill.in-transit {
+            background-color: var(--in-transit-color);
+        }
+
+        .status-bar-fill.delivered {
+            background-color: var(--success-color);
+        }
+
+        .status-bar-fill.cancelled {
+            background-color: var(--danger-color);
+        }
+
+        .time-bar-fill.morning {
+            background-color: #f4a261;
+        }
+
+        .time-bar-fill.afternoon {
+            background-color: #e76f51;
+        }
+
+        .time-bar-fill.evening {
+            background-color: #2a9d8f;
+        }
+
+        .neighborhood-distribution, .top-items {
+            margin-top: 1rem;
+        }
+
+        .neighborhood-item, .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+
+        .neighborhood-item:last-child, .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-secondary {
+            background-color: var(--gray-medium);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d1d1;
+        }
+
+        .btn-export {
+            background-color: #38c172;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background-color: #2ea55b;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <div class="logo">
+                <div class="logo-img">
+                    <img src="Imagens/logo-joao-acai.png" alt="Logo" />
+                </div>
+                <div class="logo-text">João do Açaí - Admin</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">A</div>
+            <div class="user-name">Admin</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="navigation-buttons">
+            <a href="index.html"><button type="button" class="btn btn-secondary">Pedidos</button></a>
+            <button type="button" class="btn btn-primary">Dashboard</button>
+            <a href="products.html"><button type="button" class="btn btn-secondary">Produtos</button></a>
+        </div>
+
+        <div class="filters">
+            <h2 class="filters-title">Filtros</h2>
+            <form class="filters-form" id="filtersForm">
+                <div class="form-group">
+                    <label for="filterPreset">Período</label>
+                    <select class="form-control" id="filterPreset">
+                        <option value="last7days">Últimos 7 dias</option>
+                        <option value="last30days">Últimos 30 dias</option>
+                        <option value="thisMonth">Este mês</option>
+                        <option value="lastMonth">Último mês</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                </div>
+                <div class="form-group" id="customDateRange" style="display: none;">
+                    <label for="filterStartDate">Data de Início</label>
+                    <input type="date" class="form-control" id="filterStartDate">
+                </div>
+                <div class="form-group" id="customDateRangeEnd" style="display: none;">
+                    <label for="filterEndDate">Data de Término</label>
+                    <input type="date" class="form-control" id="filterEndDate">
+                </div>
+                <div class="filter-actions">
+                    <button type="button" class="btn btn-secondary" id="resetFilters">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18"></path>
+                            <path d="M18.36 11.64a6 6 0 1 0-8.48 0"></path>
+                            <path d="m21 3-9 9"></path>
+                        </svg>
+                        Limpar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="applyFilters">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"></path>
+                        </svg>
+                        Filtrar
+                    </button>
+                    <button type="button" class="btn btn-export" id="exportCSV">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Exportar CSV
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="period-info" id="periodInfo">
+            Mostrando dados de --/--/---- a --/--/----
+        </div>
+
+        <div class="dashboard">
+            <div class="card">
+                <h2 class="card-title">Total de Pedidos</h2>
+                <div class="card-value" id="totalOrders">0</div>
+                <div class="card-description">Pedidos realizados no período</div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Receita Total</h2>
+                <div class="card-value" id="totalRevenue">R$ 0,00</div>
+                <div class="card-description">Soma do valor dos pedidos</div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Tempo Médio de Entrega</h2>
+                <div class="card-value" id="avgDeliveryTime">0 min</div>
+                <div class="card-description">Média para pedidos entregues</div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Entregas no Prazo</h2>
+                <div class="card-value" id="onTimeDeliveryRate">0%</div>
+                <div class="card-description">Pedidos entregues em até 45 min</div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Taxa de Cancelamento</h2>
+                <div class="card-value" id="cancelRate">0%</div>
+                <div class="card-description">Percentual de pedidos cancelados</div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Taxa de Satisfação</h2>
+                <div class="card-value" id="satisfactionRate">0%</div>
+                <div class="card-description">Baseado em entregas no prazo</div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Distribuição por Status</h2>
+                <div class="status-distribution" id="statusDistribution">
+                    <!-- Status será preenchido dinamicamente -->
+                </div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Pedidos por Bairro</h2>
+                <div class="neighborhood-distribution" id="neighborhoodDistribution">
+                    <!-- Bairros serão preenchidos dinamicamente -->
+                </div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Pedidos por Horário</h2>
+                <div class="time-distribution" id="timeDistribution">
+                    <!-- Horários serão preenchidos dinamicamente -->
+                </div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Itens Mais Vendidos</h2>
+                <div class="top-items" id="topItems">
+                    <!-- Itens serão preenchidos dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
